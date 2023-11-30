@@ -43,20 +43,20 @@ app.whenReady().then(async ()=>{
     if (mainWindow === null){
         createWindow();
     }
-    const botname = "TEST";
+    // const botname = "TEST";
 
-    const client = new ddnet.Client("185.107.96.197", 8304, botname, 
-		{ identity: { 
-			name: botname, 
-			clan: "BOT", 
-			country: 0, 
-			skin: "default", 
-			use_custom_color: 0, 
-			color_body: 65408, 
-			color_feet: 65408 
-		}});
+    // const client = new ddnet.Client("185.107.96.197", 8304, botname, 
+	// 	{ identity: { 
+	// 		name: botname, 
+	// 		clan: "BOT", 
+	// 		country: 0, 
+	// 		skin: "default", 
+	// 		use_custom_color: 0, 
+	// 		color_body: 65408, 
+	// 		color_feet: 65408 
+	// 	}});
 
-    client.connect();
+    // client.connect();
 
     ipcMain.handle('sendMsg', async (event, msg) => {
         client.game.Say(msg);

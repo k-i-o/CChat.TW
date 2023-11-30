@@ -179,7 +179,6 @@ var Client = /** @class */ (function (_super) {
         _this.UUIDManager.RegisterName("checksum-response@ddnet.tw", NETMSG_Sys.NETMSG_CHECKSUM_RESPONSE);
         _this.UUIDManager.RegisterName("checksum-error@ddnet.tw", NETMSG_Sys.NETMSG_CHECKSUM_ERROR);
         _this.UUIDManager.RegisterName("redirect@ddnet.org", NETMSG_Sys.NETMSG_REDIRECT);
-        _this.UUIDManager.RegisterName("i-am-npm-package@swarfey.gitlab.io", NETMSG_Sys.NETMSG_I_AM_NPM_PACKAGE);
         return _this;
     }
     Client.prototype.ResendAfter = function (lastAck) {
