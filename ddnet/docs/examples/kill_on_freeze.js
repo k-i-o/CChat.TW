@@ -1,4 +1,4 @@
-let teeworlds = require('teeworlds');
+let teeworlds = require('../../index.js');
 let client = new teeworlds.Client("185.107.96.197", 8303, "cacca");
 
 client.on("connected", () => console.log("connected!"))

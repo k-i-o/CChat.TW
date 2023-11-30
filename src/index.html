@@ -71,37 +71,30 @@
     <div class="body">
 
         <div id="servers">
+          
+          <div class="inputs">
+              <input id="filter" type="text" placeholder="Filter" >
+              <button onclick="getServers()">Refresh</button>
+              <button onclick="eAPI.joinServer()">Join</button>
+          </div>
+          
+          <div class="table-wrapper">
             <table>
-                <tr>
-                    <td>
-                        <table>
-                            <tr style="color:white;background-color:grey">
-                                <th>Server</th>
-                                <th>Type</th>
-                                <th>Map</th>
-                                <th>Players</th>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="overflow:auto;">
-                            <table id="serverContent">
-
-                            </table>  
-                        </div>
-                    </td>
-                </tr>
+              <thead>
+                <th>Server</th>
+                <th>Type</th>
+                <th>Map</th>
+                <th>Players</th>
+              </thead> 
+              <tbody id="serverContent">       
+            
+              </tbody>
             </table>
+          </div>
 
-            <div class="inputs">
-                <input id="filter" type="text" placeholder="Filter">
-                <button onclick="getServers()">Refresh</button>
-            </div>
         </div>
 
-        <div class="joined-server-wrapper">
+        <div id="joined-server-wrapper">
             <div class="server-info"><span class="server-name"></span><span class="server-ip"></span><span class="map-name"></span></div>
             <input id="msg" type="text" value="Test">
             <button onclick="eAPI.sendMsg(document.querySelector('#msg').value)">Send</button>

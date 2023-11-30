@@ -2,8 +2,8 @@ const teeworlds = require('../../index.js')
 const axios = require('axios');
 
 let servers = [
-	{host: "185.107.96.197", username: "root", password: "moFoMsi7iH", remote_maps_path: "/root/ddnet/GER/data/maps/"},
-	{host: "192.223.24.201", username: "root", password: "Nt5GuyRhNQ", remote_maps_path: "/root/ddnet/USA/data/maps/"}
+	{host: "185.107.96.197"},
+	{host: "192.223.24.201"}
 ];
 
 let clients = [];
@@ -55,29 +55,6 @@ servers.forEach((server, index) => {
 			} else if (msg.message.toLowerCase() == ";list") {
 				let list = client.SnapshotUnpacker.AllObjClientInfo.map( a => a.name );
 				client.game.Say(list.join(", "));
-			} else if (msg.message.toLowerCase().startsWith(";traslate")) {
-				const encodedParams = new URLSearchParams();
-				encodedParams.set('source_language', 'it');
-				encodedParams.set('target_language', 'en');
-				encodedParams.set('text', msg.message.slice(";traslate ".length));
-
-				const options = {
-					method: 'POST',
-					url: 'https://text-translator2.p.rapidapi.com/translate',
-					headers: {
-						'content-type': 'application/x-www-form-urlencoded',
-						'X-RapidAPI-Key': '1bd3ee7b49msh39b6dcf0cdac38ep142059jsn224100bd5911',
-						'X-RapidAPI-Host': 'text-translator2.p.rapidapi.com'
-					},
-					data: encodedParams,
-				};
-
-				try {
-					const response = await axios.request(options);
-					client.game.Say("English: " + response.data.traslatedText);
-				} catch (error) {
-					console.error(error);
-				}
 			}
 		})
 		

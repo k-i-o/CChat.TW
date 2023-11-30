@@ -2,13 +2,17 @@
 @window-height: 100vh;
 
 @primary-color: #d32213;
+@dark-color1: #262626;
+@dark-color2: #3c3c3c;
 
-@title-bar-color: #262626;
-@title-bar-button-color: #3c3c3c;
+@title-bar-color: @dark-color1;
+@title-bar-button-color: @dark-color2;
 @title-bar-border: 2px;
 @title-bar-height: 30px;
 
 @body-height: calc(@window-height - @title-bar-height);
+@filter-height: 70px;
+@table-height: calc(@window-height - @title-bar-height - @filter-height);
 
 * {
     box-sizing: border-box;
@@ -148,7 +152,6 @@ input[type="range"] {
     
 }
 
-
 .color-input {
     position: relative;
     width: 30px;
@@ -176,7 +179,6 @@ input[type="color"] {
     }
 
 }
-
 
 .title-bar {
 
@@ -237,16 +239,39 @@ input[type="color"] {
 
         display: flex;
         flex-direction: column;
-        gap: 10px;
         height: 100%;
         width: 100%;
+
+        .inputs {
+            height: @filter-height;
+            background-color: @dark-color2;
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+        }
     
-        table {
-            width: 100%;
+        .table-wrapper {
+
+            height: @table-height;
+            overflow-y: scroll;
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                overflow: hidden;
+                display: block;
+
+                th, td {
+                    width: 100%;
+                    padding: 10px;
+                    text-align: left;
+                }
+            }
+
         }
     }
     
-    .joined-server-wrapper {
+    #joined-server-wrapper {
         display: none;
     }
 
