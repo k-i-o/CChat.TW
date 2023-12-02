@@ -46,10 +46,6 @@ app.whenReady().then(async ()=>{
         createWindow();
     }
 
-    setInterval(() => {
-        console.log(ipcMain.emit("message", "ciao"));
-    }, 1000);
-
     ipcMain.on('close', (event) => {
         app.quit();
     });
@@ -68,9 +64,7 @@ app.whenReady().then(async ()=>{
 
     ipcMain.handle('connect', async (event, ip, port) => {
 
-        console.log(ip, port);
-
-        client = new ddnet.Client("185.107.96.197", 8303, botname, 
+        client = new ddnet.Client(ip, port, botname, 
             { 
                 identity: { 
                     name: botname, 
@@ -98,9 +92,7 @@ app.whenReady().then(async ()=>{
             let author = pkg.author?.ClientInfo?.name;
             let message = pkg.message;
 
-            if(author == client.name) return;
-
-            ipcMain.send("message", author, message);
+            mainWindow.webContents.send('message', author, message);
         });
 
         process.on("SIGINT", () => {
@@ -112,8 +104,12 @@ app.whenReady().then(async ()=>{
     
     ipcMain.handle('sendMsg', async (event, msg) => {
         if(client == null) return;
-        console.log(msg);
         client.game.Say(msg);
+    });
+
+    ipcMain.handle('disconnect', async (event, msg) => {
+        if(client == null) return;
+        client.Disconnect();
     });
 
 });

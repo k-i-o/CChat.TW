@@ -5,17 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet/less" type="text/css" href="style.less" />
     <script src="https://cdn.jsdelivr.net/npm/less" ></script>
-    <title>DDNet Client Webchat</title>
+    <title>CChatTW</title>
+    <!-- description: chat ddnet ui -->
+    <!-- keywords: chat, ddnet, ui, cchat, cchattw, cchat.tw, cchat -->
+    <meta name="description" content="CChatTW is a modern chat client for DDNet">
+    <meta name="keywords" content="chat, ddnet, ui, cchat, cchattw, cchat.tw, cchat">
 </head>
 <body>
 
     <div class="title-bar">
-  
-        <div class="drag"></div>
-  
-        <div class="buttons">
-          <button id="minimize" onclick="eAPI.minimize()" title="Minimize the window">
-  
+
+      <div class="title">
+        <span class="icon"></span>
+        <span class="text">CChatTW</span>
+      </div>
+
+      <div class="drag"></div>
+
+      <div class="buttons">
+        <button id="minimize" onclick="eAPI.minimize()" title="Minimize the window">
+
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M19.5 12h-15"
+          />
+        </svg>
+        </button>
+        <button id="maximize" onclick="eAPI.maximize()" title="Maximize the window">
             <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -27,82 +52,97 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M19.5 12h-15"
+              d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6"
             />
           </svg>
-          </button>
-          <button id="maximize" onclick="eAPI.maximize()" title="Maximize the window">
-              <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6"
-              />
-            </svg>
-          </button>
-          <button id="close" onclick="eAPI.close()" title="CLOSE the application!!">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+        </button>
+        <button id="close" onclick="eAPI.close()" title="CLOSE the application!!">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
-
     </div>
 
     <div class="body">
 
-        <div id="servers">
+      <div id="servers">
+        
+        <div class="inputs">
+          <input id="filter" type="text" placeholder="Filter...">
+          <!-- <button onclick="eAPI.joinServer()">Join</button> -->
+          <button onclick="getServers()" class="single">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        </div>
+        
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <th>Server</th>
+              <th>Type</th>
+              <th>Map</th>
+              <th>Players</th>
+            </thead> 
+            <tbody id="serverContent">       
           
-          <div class="inputs">
-              <input id="filter" type="text" placeholder="Filter" >
-              <button onclick="getServers()">Refresh</button>
-              <button onclick="eAPI.joinServer()">Join</button>
-          </div>
-          
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <th>Server</th>
-                <th>Type</th>
-                <th>Map</th>
-                <th>Players</th>
-              </thead> 
-              <tbody id="serverContent">       
-            
-              </tbody>
-            </table>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div id="joined-server-wrapper">
+        <div class="server-info">
+          <button class="single" type="button" onclick="back()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+          </button>
+          <div class="data">
+            <span class="server-name"></span>
+            <span class="map-name"></span>
+            <span class="server-ip"></span>
           </div>
 
         </div>
-
-        <div id="joined-server-wrapper">
-            <div class="server-info"><span class="server-name"></span><span class="server-ip"></span><span class="map-name"></span></div>
-            <input id="msg" type="text" value="Test">
-            <button onclick="eAPI.sendMsg(document.querySelector('#msg').value)">Send</button>
-        </div>
+        <div id="chat"></div>
+        <form class="chatTools">
+          <input name="sendmsg" type="text" placeholder="Type...">
+          <button class="single" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+            </svg>
+          </button>
+        </form>
+      </div>
 
     </div>
 
-    
+    <div class="footer-bar">
+  
+      <div>© <script>document.write(new Date().getFullYear())</script> <a href="#" onclick="eAPI.goto('https://github.com/k-i-o')">Samuele Radici</a> All Rights Reserved.</div>
+
+      <div class="drag"></div>
+
+      <div>Sponsored by <a href="#" onclick="eAPI.goto('https://gores.pro')">Gores Champions Ladder</a></div>
+
+    </div>
+
+  </div>
 </body>
 <script src="script.js"></script>
 </html>

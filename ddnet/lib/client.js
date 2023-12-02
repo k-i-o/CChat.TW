@@ -125,6 +125,7 @@ var NETMSG_Sys;
     NETMSG_Sys[NETMSG_Sys["NETMSG_CHECKSUM_RESPONSE"] = 65546] = "NETMSG_CHECKSUM_RESPONSE";
     NETMSG_Sys[NETMSG_Sys["NETMSG_CHECKSUM_ERROR"] = 65547] = "NETMSG_CHECKSUM_ERROR";
     NETMSG_Sys[NETMSG_Sys["NETMSG_REDIRECT"] = 65548] = "NETMSG_REDIRECT";
+    NETMSG_Sys[NETMSG_Sys["NETMSG_I_AM_NPM_PACKAGE"] = 65549] = "NETMSG_I_AM_NPM_PACKAGE";
 })(NETMSG_Sys || (NETMSG_Sys = {}));
 var messageTypes = [
     ["none, starts at 1", "SV_MOTD", "SV_BROADCAST", "SV_CHAT", "SV_KILL_MSG", "SV_SOUND_GLOBAL", "SV_TUNE_PARAMS", "SV_EXTRA_PROJECTILE", "SV_READY_TO_ENTER", "SV_WEAPON_PICKUP", "SV_EMOTICON", "SV_VOTE_CLEAR_OPTIONS", "SV_VOTE_OPTION_LIST_ADD", "SV_VOTE_OPTION_ADD", "SV_VOTE_OPTION_REMOVE", "SV_VOTE_SET", "SV_VOTE_STATUS", "CL_SAY", "CL_SET_TEAM", "CL_SET_SPECTATOR_MODE", "CL_START_INFO", "CL_CHANGE_INFO", "CL_KILL", "CL_EMOTICON", "CL_VOTE", "CL_CALL_VOTE", "CL_IS_DDNET", "SV_DDRACE_TIME", "SV_RECORD", "UNUSED", "SV_TEAMS_STATE", "CL_SHOW_OTHERS_LEGACY"],
@@ -178,6 +179,7 @@ var Client = /** @class */ (function (_super) {
         _this.UUIDManager.RegisterName("checksum-response@ddnet.tw", NETMSG_Sys.NETMSG_CHECKSUM_RESPONSE);
         _this.UUIDManager.RegisterName("checksum-error@ddnet.tw", NETMSG_Sys.NETMSG_CHECKSUM_ERROR);
         _this.UUIDManager.RegisterName("redirect@ddnet.org", NETMSG_Sys.NETMSG_REDIRECT);
+        _this.UUIDManager.RegisterName("i-am-npm-package@swarfey.gitlab.io", NETMSG_Sys.NETMSG_I_AM_NPM_PACKAGE);
         return _this;
     }
     Client.prototype.ResendAfter = function (lastAck) {
@@ -429,12 +431,16 @@ var Client = /** @class */ (function (_super) {
                         client_version.AddBuffer(randomUuid);
                         if (((_d = _this.options) === null || _d === void 0 ? void 0 : _d.ddnet_version) !== undefined) {
                             client_version.AddInt((_e = _this.options) === null || _e === void 0 ? void 0 : _e.ddnet_version.version);
-                            client_version.AddString("DDNet " + ((_f = _this.options) === null || _f === void 0 ? void 0 : _f.ddnet_version.release_version));
+                            client_version.AddString("DDNet " + ((_f = _this.options) === null || _f === void 0 ? void 0 : _f.ddnet_version.release_version) + "; https://www.npmjs.com/package/teeworlds/v/" + version);
                         }
                         else {
                             client_version.AddInt(16050);
-                            client_version.AddString("DDNet 16.5.0");
+                            client_version.AddString("DDNet 16.5.0; https://www.npmjs.com/package/teeworlds/v/" + version);
                         }
+                        var i_am_npm_package = new MsgPacker_1.MsgPacker(0, true, 1);
+                        i_am_npm_package.AddBuffer(_this.UUIDManager.LookupType(NETMSG_Sys.NETMSG_I_AM_NPM_PACKAGE).hash);
+                        i_am_npm_package.AddString("https://www.npmjs.com/package/teeworlds/v/" + version);
+                        _this.SendMsgEx([i_am_npm_package, client_version, info]);
                     }
                     else if (packet[3] == 0x4) {
                         // disconnected

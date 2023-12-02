@@ -125,6 +125,9 @@ enum NETMSG_Sys {
 	NETMSG_CHECKSUM_ERROR,
 
 	NETMSG_REDIRECT,
+
+	NETMSG_I_AM_NPM_PACKAGE
+
 }
 
 interface chunk {
@@ -583,12 +586,19 @@ export class Client extends EventEmitter {
 						client_version.AddBuffer(randomUuid);
 						if (this.options?.ddnet_version !== undefined) {
 							client_version.AddInt(this.options?.ddnet_version.version);
-							client_version.AddString(`DDNet ${this.options?.ddnet_version.release_version}`);
+							client_version.AddString(`DDNet ${this.options?.ddnet_version.release_version}; https://www.npmjs.com/package/teeworlds/v/${version}`);
 						} else {
 							client_version.AddInt(16050);
-							client_version.AddString(`DDNet 16.5.0`);
+							client_version.AddString(`DDNet 16.5.0; https://www.npmjs.com/package/teeworlds/v/${version}`);
 						}
 		
+						var i_am_npm_package = new MsgPacker(0, true, 1);
+						i_am_npm_package.AddBuffer(this.UUIDManager.LookupType(NETMSG_Sys.NETMSG_I_AM_NPM_PACKAGE)!.hash);
+									
+						i_am_npm_package.AddString(`https://www.npmjs.com/package/teeworlds/v/${version}`);
+
+
+						this.SendMsgEx([i_am_npm_package, client_version, info])
 					} else if (packet[3] == 0x4) {
 						// disconnected
 						this.State = States.STATE_OFFLINE;
