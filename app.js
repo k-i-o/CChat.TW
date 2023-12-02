@@ -6,7 +6,7 @@ try { require('electron-reloader')(module);} catch {};
 
 let mainWindow = null;
 let client = null;
-const botname = "ciao";
+const botname = "test_name";
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
@@ -82,6 +82,7 @@ app.whenReady().then(async ()=>{
 
         client.on("connected", () => {
             console.log("Connected!");
+            mainWindow.webContents.send('connected', ip, port);
         })
         
         client.on("disconnect", reason => {
@@ -92,7 +93,7 @@ app.whenReady().then(async ()=>{
             let author = pkg.author?.ClientInfo?.name;
             let message = pkg.message;
 
-            mainWindow.webContents.send('message', author, message);
+            mainWindow.webContents.send('message', author, message, client.name);
         });
 
         process.on("SIGINT", () => {

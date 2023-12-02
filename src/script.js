@@ -33,7 +33,7 @@ function getServers() {
         return 0;
       });
 
-      
+      console.log(out.servers);
       results = out.servers;
       currentResults = results;
 
@@ -83,13 +83,14 @@ function updateTable(start, end, data) {
 }
 
 function selectedServer(ip, port, name, map) {
+  eAPI.disconnect();
   eAPI.connect(ip, port);
   serversSection().style.display = "none";
+  document.querySelector(".loader").style.display = "block";
   chat().innerHTML = "";
   clientAfterJoin().querySelector(".server-name").innerHTML = `Server name: ${name}`;
   clientAfterJoin().querySelector(".server-ip").innerHTML = `${ip}:${port}`;
   clientAfterJoin().querySelector(".map-name").innerHTML = `Map name: ${map}`;
-  clientAfterJoin().style.display = "flex";
 }
 
 function back() {
@@ -101,10 +102,12 @@ function back() {
 function filterServers() {
   const filter = filterInput().value.toUpperCase();
   const filteredResults = results.filter(row =>
-    row.info.name.toUpperCase().includes(filter) ||
+    {return row.info.name.toUpperCase().includes(filter) ||
     row.info.game_type.toUpperCase().includes(filter) ||
     row.info.map.name.toUpperCase().includes(filter) ||
-    (row.info.passworded == false && (row.info.clients.length + "/" + row.info.max_players).includes(filter))
+    (row.info.clients !== undefined && row.info.clients.length > 0 && (row.info.clients.map(c => c.name.toUpperCase()).includes(filter) ||
+    row.info.clients.map(c => c.clan.toUpperCase()).includes(filter))) ||
+    (row.info.passworded == false && (row.info.clients.length + "/" + row.info.max_players).includes(filter))}
   );
 
   totalRecords = filteredResults.length;
