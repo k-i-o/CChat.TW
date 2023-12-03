@@ -251,9 +251,6 @@ export class Client extends EventEmitter {
 	constructor(nickname: string, options?: iOptions) {
 		super();
 
-		this.host = "0.0.0.0";
-		this.port = 8303;
-
 		this.name = nickname;
 		this.AckGameTick = 0;
 		this.PredGameTick = 0;
@@ -985,7 +982,7 @@ export class Client extends EventEmitter {
 	}
 	
 	/** Disconnect the client. */
-	Disconnect() { 
+	disconnect() { 
 		return new Promise((resolve) => {
 			this.SendControlMsg(4).then(() => {
 				resolve(true);

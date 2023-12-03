@@ -15,6 +15,6 @@ client.on("snapshot", () => {
 client.connect();
 
 process.on("SIGINT", () => {
-	client.Disconnect().then(() => process.exit(0)); // disconnect on ctrl + c
+	client.disconnect().then(() => process.exit(0)); // disconnect on ctrl + c
 	// process.exit()
 })

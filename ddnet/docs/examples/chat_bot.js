@@ -62,6 +62,6 @@ servers.forEach((server, index) => {
 });
 
 process.on("SIGINT", () => {
-	clients.forEach(client => client.Disconnect().then(() => process.exit(0))); // disconnect on ctrl + c
+	clients.forEach(client => client.disconnect().then(() => process.exit(0))); // disconnect on ctrl + c
 	// process.exit()
 })

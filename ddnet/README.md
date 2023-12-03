@@ -80,7 +80,7 @@ client.on("kill", info => {
 })
 
 process.on("SIGINT", () => {
-	client.Disconnect().then(() => process.exit(0)); // disconnect on ctrl + c
+	client.disconnect().then(() => process.exit(0)); // disconnect on ctrl + c
 	// process.exit()
 })
 process.stdin.on("data", data => {

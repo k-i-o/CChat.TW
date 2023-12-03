@@ -325,7 +325,7 @@ The movement component is accessable using `client.movement`.
 
 
 # Other useful things
-* client.Disconnect() - disconnects the client.
+* client.disconnect() - disconnects the client.
 * client.sendInput() - sends an input packet
 * client.VoteOptionList - returns the whole vote list.
 ### You can also specify some options in the client constructor:

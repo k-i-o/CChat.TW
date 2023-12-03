@@ -24,6 +24,10 @@ let teeColorFeetValue = () => localIdentity()?.color_feet || "ffffff";
 
 document.addEventListener('DOMContentLoaded', () => {
   getServers();
+
+  setInterval(() => {
+    getServers();
+  }, 5000);
 });
 
 function getServers(btn = null) {
@@ -53,7 +57,6 @@ function getServers(btn = null) {
       return 0;
     });
 
-    console.log(out.servers);
     results = out.servers;
     currentResults = results;
 

@@ -34,7 +34,7 @@ const createWindow = () => {
     mainWindow.on('closed', () => {
         mainWindow = null
         if(client == null) return;
-        client.Disconnect();
+        client.disconnect();
     });
 
     mainWindow.on("ready-to-show", async () => {
@@ -96,7 +96,7 @@ app.whenReady().then(async () => {
 
         process.on("SIGINT", () => {
             if(client == null) return;
-            client.Disconnect().then(() => process.exit(0));
+            client.disconnect().then(() => process.exit(0));
         });
 
     });
@@ -108,7 +108,7 @@ app.whenReady().then(async () => {
 
     ipcMain.handle('disconnect', async (event, msg) => {
         if(client == null) return;
-        client.Disconnect();
+        client.disconnect();
     });
 
     ipcMain.handle('setTeeInfo', async (event, name, clan, skin, use_custom, color_body, color_feet) => {
