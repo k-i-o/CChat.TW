@@ -135,6 +135,8 @@ var Client = /** @class */ (function (_super) {
     __extends(Client, _super);
     function Client(nickname, options) {
         var _this = _super.call(this) || this;
+        _this.host = "0.0.0.0";
+        _this.port = 8303;
         _this.name = nickname;
         _this.AckGameTick = 0;
         _this.PredGameTick = 0;

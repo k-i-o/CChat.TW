@@ -37,20 +37,25 @@ const createWindow = () => {
         client.Disconnect();
     });
 
-    mainWindow.on("ready-to-show", () => {
+    mainWindow.on("ready-to-show", async () => {
         mainWindow.webContents.openDevTools();
+        
+        const identity = await getItem("identity") || {
+            name: "CChatter",
+            clan: "GCL",
+            country: 0, 
+            skin: "default",
+            use_custom_color: 0,
+            color_body: 65408,
+            color_feet: 65408,
+        };
+
+        client = new ddnet.Client(identity.name, {identity});
     });
 
 }
 
-app.whenReady().then(async ()=>{
-    if (mainWindow === null){
-        createWindow();
-
-        const identity = await getItem("identity");
-
-        client = new ddnet.Client(identity.name, {identity});
-    }
+app.whenReady().then(async () => {
 
     ipcMain.on('close', (event) => {
         app.quit();
@@ -79,6 +84,7 @@ app.whenReady().then(async ()=>{
         
         client.on("disconnect", reason => {
             console.log("Disconnected: " + reason);
+            mainWindow.webContents.send('disconnected', reason);
         })
 
         client.on("message", async (pkg) => {
@@ -121,6 +127,11 @@ app.whenReady().then(async ()=>{
         await setItem("identity", JSON.stringify(client.options.identity));
 
     });
+
+    if (mainWindow === null){
+        createWindow();        
+    }
+
 
 });
 

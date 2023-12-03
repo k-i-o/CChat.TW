@@ -251,6 +251,9 @@ export class Client extends EventEmitter {
 	constructor(nickname: string, options?: iOptions) {
 		super();
 
+		this.host = "0.0.0.0";
+		this.port = 8303;
+
 		this.name = nickname;
 		this.AckGameTick = 0;
 		this.PredGameTick = 0;

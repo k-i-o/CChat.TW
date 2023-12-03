@@ -19,10 +19,26 @@ ipcRenderer.on('message', (event, author, message, myname) => {
 });
 
 const clientAfterJoin = () => document.querySelector("#joined-server-wrapper");
+const serversSection = () => document.querySelector("#servers");
+const loadPage = () => document.querySelector(".load-page");
 const chat = () => document.querySelector("#chat");
 
-ipcRenderer.on('connected', (event, ip) => {
+ipcRenderer.on('connected', (event) => {
   console.log("Connected!");
-  document.querySelector(".loader").style.display = "none";
+  loadPage().style.display = "none";
   clientAfterJoin().style.display = "flex";
+});
+
+ipcRenderer.on('disconnected', (event, reason) => {
+  console.log("Disconnected!");
+
+  document.querySelector(".disconnection-reason").innerHTML = reason;
+
+  setTimeout(() => {
+    loadPage().style.display = "none";
+    document.querySelector(".disconnection-reason").innerHTML = "";
+    clientAfterJoin().style.display = "none";
+    loadPage().style.display = "none";
+    serversSection().style.display = "flex";
+  }, 1500);
 });
