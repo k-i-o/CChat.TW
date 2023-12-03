@@ -1,10 +1,10 @@
 {
-  "name": "webchat",
+  "name": "cchattw",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "directories": {
-    "lib": "lib"
+    "ddnet": "ddnet"
   },
   "scripts": {
     "start": "electron .",

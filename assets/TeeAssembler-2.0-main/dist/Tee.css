@@ -1,0 +1,102 @@
+/*
+
+	TeeAssembler 2.0
+
+	Made by Aleksandar Blažić
+	Discord: Alexander_#6686
+	
+*/
+
+.tee {
+	font-size: 1px;
+}
+
+.tee [body-part] {
+    position: absolute;
+}
+
+.back_foot,.back_foot_shadow,.front_foot,.front_foot_shadow {
+	width: 64em;
+	height: 32em;
+}
+
+.back_foot_shadow {
+	background-position: -192em -64em;
+	top: 52em;
+	left: 4em;
+	transform: scale(1.2);
+}
+
+.back_foot {
+	background-position: -192em -32em;
+	top: 51em;
+	left: 7em;
+	transform: scale(1.4);
+}
+
+.body,.body_shadow {
+	width: 96em;
+	height: 96em;
+	transform: scale(.9);
+	top: 0;
+}
+
+.body_shadow {
+	background-position: -96em 0;
+}
+
+.body {
+	background-position: 0 0;
+}
+
+.front_foot_shadow {
+	background-position: -192em -64em;
+	top: 52em;
+	left: 28em;
+	transform: scale(1.2);
+}
+
+.front_foot {
+	background-position: -192em -32em;
+	top: 51em;
+	left: 26em;
+	transform: scale(1.35);
+}
+
+.lEye,.rEye {
+	display: inline-flex;
+	width: 32em;
+	height: 32em;
+	background-position: -64em -96em;
+	filter: brightness(1);
+}
+
+.lEye {
+	left: -22em;
+	top: -21em;
+	transform: scale(1.08);
+}
+
+.rEye {
+	left: -9em;
+	top: -21em;
+	transform: scale(1.08) rotateY(-180deg);
+}
+
+.tee .line {
+	width: 9.5em;
+	height: 1em;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform-origin: 0.5em 0.5em;
+	opacity: 0;
+}
+
+.tee .marker {
+	width: 1em;
+	height: 1em;
+	position: absolute;
+	right: -1em;
+	opacity: 0;
+}

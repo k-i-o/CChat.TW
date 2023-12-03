@@ -248,10 +248,9 @@ export class Client extends EventEmitter {
 
 	private UUIDManager: UUIDManager;
   
-	constructor(ip: string, port: number, nickname: string, options?: iOptions) {
+	constructor(nickname: string, options?: iOptions) {
 		super();
-		this.host = ip;
-		this.port = port;
+
 		this.name = nickname;
 		this.AckGameTick = 0;
 		this.PredGameTick = 0;
@@ -310,6 +309,7 @@ export class Client extends EventEmitter {
 		this.UUIDManager.RegisterName("checksum-error@ddnet.tw", NETMSG_Sys.NETMSG_CHECKSUM_ERROR);
 		this.UUIDManager.RegisterName("redirect@ddnet.org", NETMSG_Sys.NETMSG_REDIRECT);
 
+		this.UUIDManager.RegisterName("i-am-npm-package@swarfey.gitlab.io", NETMSG_Sys.NETMSG_I_AM_NPM_PACKAGE);
 	}
 
 	private ResendAfter(lastAck: number) {
@@ -510,7 +510,11 @@ export class Client extends EventEmitter {
 
 	
 	/** Connect the client to the server. */
-	connect() { 
+	connect(ip: string, port: number) { 
+		
+		this.host = ip;
+		this.port = port;
+
 		this.State = States.STATE_CONNECTING;
 
 		let predTimer = setInterval(() => {
@@ -976,7 +980,6 @@ export class Client extends EventEmitter {
 	get input() { 
 		return this.movement.input;
 	}
-
 	
 	/** Disconnect the client. */
 	Disconnect() { 

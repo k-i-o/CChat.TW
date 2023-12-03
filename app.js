@@ -1,19 +1,19 @@
 const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 const path = require('path')
 const url = require('url')
-const ddnet = require('./ddnet/index.js')
+const ddnet = require('./ddnet/index.js');
+const { get } = require('http');
 try { require('electron-reloader')(module);} catch {};
 
 let mainWindow = null;
 let client = null;
-const botname = "test_name";
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         autoHideMenuBar: true,
         width: 1200,
         height: 800,
-        // icon: __dirname + '/assets/favicon/favicon-96x96.png',
+        icon: __dirname + '/assets/logo.png',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
@@ -33,6 +33,8 @@ const createWindow = () => {
 
     mainWindow.on('closed', () => {
         mainWindow = null
+        if(client == null) return;
+        client.Disconnect();
     });
 
     mainWindow.on("ready-to-show", () => {
@@ -44,6 +46,10 @@ const createWindow = () => {
 app.whenReady().then(async ()=>{
     if (mainWindow === null){
         createWindow();
+
+        const identity = await getItem("identity");
+
+        client = new ddnet.Client(identity.name, {identity});
     }
 
     ipcMain.on('close', (event) => {
@@ -64,21 +70,7 @@ app.whenReady().then(async ()=>{
 
     ipcMain.handle('connect', async (event, ip, port) => {
 
-        client = new ddnet.Client(ip, port, botname, 
-            { 
-                identity: { 
-                    name: botname, 
-                    clan: "", 
-                    country: 0, 
-                    skin: "default", 
-                    use_custom_color: 0, 
-                    color_body: 65408, 
-                    color_feet: 65408 
-                }
-            }
-        );
-
-        client.connect();
+        client.connect(ip, port);
 
         client.on("connected", () => {
             console.log("Connected!");
@@ -113,8 +105,37 @@ app.whenReady().then(async ()=>{
         client.Disconnect();
     });
 
+    ipcMain.handle('setTeeInfo', async (event, name, clan, skin, use_custom, color_body, color_feet) => {
+        if(client == null) return;
+        client.options.identity = {
+            name: name,
+            clan: clan,
+            country: 0, 
+            skin: skin,
+            use_custom_color: use_custom ? 1 : 0,
+            color_body: color_body,
+            color_feet: color_feet,
+        };
+        client.game.ChangePlayerInfo(client.options.identity);
+
+        await setItem("identity", JSON.stringify(client.options.identity));
+
+    });
+
 });
 
+async function getItem(key) {
 
+    let result = await mainWindow.webContents.executeJavaScript('localStorage.getItem("'+key+'");', true);
+    
+    return JSON.parse(result);
+    
+}
 
+async function setItem(key, value) {
 
+    let result = await mainWindow.webContents.executeJavaScript('localStorage.setItem("'+key+'", JSON.stringify('+value+'));', true);
+
+    return result;
+    
+}
