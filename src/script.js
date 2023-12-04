@@ -15,7 +15,7 @@ const chat = () => document.querySelector("#chat");
 
 const localIdentity = () => JSON.parse(localStorage.getItem("identity")) || null;
 
-let teeNameValue = () => localIdentity()?.name || "CChatter";
+let teeNameValue = () => localIdentity()?.name || "caca";
 let teeClanValue = () => localIdentity()?.clan || "GCL";
 let teeSkinValue = () => localIdentity()?.skin || "default";
 let useCustomValue = () => localIdentity()?.use_custom || false;
@@ -24,15 +24,11 @@ let teeColorFeetValue = () => localIdentity()?.color_feet || "ffffff";
 
 document.addEventListener('DOMContentLoaded', () => {
   getServers();
-
-  setInterval(() => {
-    getServers();
-  }, 5000);
 });
 
 function getServers(btn = null) {
 
-  if (btn !== null) { console.log(btn); btn.style.rotate = (btn.style.rotate ? parseFloat(btn.style.rotate.replace("deg", "")) : null || 0) + 180 + "deg"; btn.disabled = true; }
+  if (btn !== null) { btn.style.rotate = (btn.style.rotate ? parseFloat(btn.style.rotate.replace("deg", "")) : null || 0) + 180 + "deg"; btn.disabled = true; }
 
   fetch('https://master1.ddnet.org/ddnet/15/servers.json', {
     method: 'GET',
@@ -62,9 +58,7 @@ function getServers(btn = null) {
 
     dynamicLoadData(currentResults);
 
-    if (btn !== null) {btn.disabled = false; }
-
-  }).catch(err => console.error(err));
+  }).catch(err => console.error(err)).finally(() => btn !== null ? btn.disabled = false : null);
 }
 
 
@@ -165,9 +159,12 @@ function filterServers() {
 let originalOrder = null; 
 
 let sortByCounter = 0;
+function sortBy(target, sortOrder = null) {
 
-function sortBy(target) {
-  sortByCounter++;
+  if (sortOrder === null)
+    sortByCounter++;
+  else
+    sortByCounter = sortOrder;
 
   if (originalOrder === null && sortByCounter === 1) {
     originalOrder = [...currentResults];
@@ -178,8 +175,6 @@ function sortBy(target) {
 
   switch (target) {
     case "type":
-      console.log("type");
-
       currentResults.sort((a, b) => {
         if (sortByCounter % 3 === 1) {
           sortIndicator.style.opacity = 1;
@@ -196,8 +191,6 @@ function sortBy(target) {
       break;
 
     case "map":
-      console.log("map");
-
       currentResults.sort((a, b) => {
         if (sortByCounter % 3 === 1) {
           sortIndicator.style.opacity = 1;
@@ -214,8 +207,6 @@ function sortBy(target) {
       break;
 
     case "players":
-      console.log("players");
-
       currentResults.sort((a, b) => {
         const clientsA = a.info.clients ? a.info.clients.length : 0;
         const clientsB = b.info.clients ? b.info.clients.length : 0;
@@ -286,7 +277,14 @@ function closeSettings() {
 document.querySelector("#settings-modal").addEventListener("submit", (e) => {
   e.preventDefault();
 
-  eAPI.setTeeInfo(teeNameValue(), teeClanValue(), teeSkinValue(), useCustomValue(), teeColorBodyValue(), teeColorFeetValue());
+  eAPI.setTeeInfo(
+    teeName().value,
+    teeClan().value,
+    teeSkin().value,
+    useCustom().checked,
+    teeColorBody().value,
+    teeColorFeet().value
+  );
 
   closeSettings();
 });

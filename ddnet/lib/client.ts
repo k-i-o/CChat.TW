@@ -208,7 +208,7 @@ export class Client extends EventEmitter {
 	private host: string;
 	private port: number;
 	private name: string;
-	private State: number; // 0 = offline; 1 = STATE_CONNECTING = 1, STATE_LOADING = 2, STATE_ONLINE = 3
+	private State: number; // 0 = offline; 1 = STATE_CONNECTING, 2 = STATE_LOADING, 3 = STATE_ONLINE
 	private ack: number;
 	private clientAck: number;
 	private receivedSnaps: number; /* wait for 2 ss before seeing self as connected */
@@ -991,6 +991,7 @@ export class Client extends EventEmitter {
 				this.socket = undefined
 				this.State = States.STATE_OFFLINE;
 			})
+			
 		})
 	}
 
