@@ -13,6 +13,8 @@ const clientAfterJoin = () => document.querySelector("#joined-server-wrapper");
 const filterInput = () => document.getElementById("filter");
 const chat = () => document.querySelector("#chat");
 
+const directIp = () => { return { ip: document.querySelector("#direct-ip").value.split(":")[0], port: document.querySelector("#direct-ip").value.split(":").length > 1 ? document.querySelector("#direct-ip").value.split(":")[1] : 8303 }};
+
 const localIdentity = () => JSON.parse(localStorage.getItem("identity")) || null;
 
 let teeNameValue = () => localIdentity()?.name || "caca";
@@ -113,7 +115,7 @@ function updateTable(start, end, data) {
   }
 }
 
-function selectedServer(ip, port, name, map) {
+function selectedServer(ip, port, name = "Unknow", map = "Unknow") {
   document.querySelector(".disconnection-reason").innerHTML = "";
   eAPI.disconnect();
   eAPI.connect(ip, port);

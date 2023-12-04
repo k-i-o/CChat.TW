@@ -96,6 +96,8 @@ app.whenReady().then(async () => {
             let author = pkg.author?.ClientInfo?.name;
             let message = pkg.message;
 
+            
+
             if(author != undefined && message.includes(client.name) && author != client.name){
                 mainWindow.flashFrame(true);
 

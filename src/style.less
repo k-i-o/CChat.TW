@@ -476,6 +476,32 @@ input[type="color"] {
             align-items: center;
             justify-content: center;
             border-bottom: 2px solid fade(@white-color, 30%);
+
+            input[type="text"]#filter {
+                width: 50%;
+            }
+
+            .direct-connection {
+
+                width: 50%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                input[type="text"]#directip {
+                    width: 100%;
+                    border-right: 1px solid fade(@white-color, 30%);
+                    border-radius: @border-radius 0 0 @border-radius;
+                }
+
+                button.single {
+                    width: 70px;
+                    border-left: 1px solid fade(@white-color, 30%);
+                    border-radius: 0 @border-radius @border-radius 0;
+                }
+    
+            }
         }
 
         .gotop {
