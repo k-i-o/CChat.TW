@@ -4,7 +4,7 @@ DDNet / Teeworlds Chat Client, no game, just chatting
 
 ## Credits
 #### Samuele Radici - Structure, Design, Development
-#### swarfey - Client JS Lib Development -> https://gitlab.com/swarfey/teeworlds-client/
+#### swarfey - Client JS Lib Development -> https://gitlab.com/swarfey/teeworlds-client/ (i edited something)
 
 ## Preview
 ![image](https://github.com/k-i-o/CChatter/assets/68398653/7eabe73e-9589-403d-9e21-3e871a4f7c57)
