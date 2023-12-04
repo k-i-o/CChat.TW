@@ -11,3 +11,6 @@ DDNet / Teeworlds Chat Client, no game, just chatting
 ![image](https://github.com/k-i-o/CChatter/assets/68398653/71dca123-6c92-465d-86df-531a572300b2)
 ![image](https://github.com/k-i-o/CChatter/assets/68398653/04ae0d42-057e-404a-ab92-f6de4b9a25ad)
 ![image](https://github.com/k-i-o/CChatter/assets/68398653/0bda5f58-de4b-487f-bdd1-e7177b4eb120)
+![New Project (1)](https://github.com/k-i-o/CChatter/assets/68398653/4fefa21e-f0b8-43af-a667-e3e0743e7694)
+![154shots_so](https://github.com/k-i-o/CChatter/assets/68398653/8c0906cf-9d04-45a3-abf2-0f6141dc24a2)
+![328shots_so](https://github.com/k-i-o/CChatter/assets/68398653/701e2cf0-538e-4b45-96c2-f9f8fd58d178)
