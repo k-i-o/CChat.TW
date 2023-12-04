@@ -42,3 +42,8 @@ ipcRenderer.on('disconnected', (event, reason) => {
     serversSection().style.display = "flex";
   }, 1500);
 });
+
+ipcRenderer.on('vote', (event, vote) => {
+  document.querySelector(".vote").innerHTML = vote;
+  document.querySelector(".vote").style.display = "flex";
+});

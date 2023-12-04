@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, ipcMain, Notification } = require('electron')
 const path = require('path')
 const url = require('url')
 const ddnet = require('./ddnet/index.js');
@@ -85,12 +85,28 @@ app.whenReady().then(async () => {
         
         client.on("disconnect", reason => {
             console.log("Disconnected: " + reason);
+            client = null;
             mainWindow.webContents.send('disconnected', reason);
         })
 
         client.on("message", async (pkg) => {
+
+            if(client == null) return;
+
             let author = pkg.author?.ClientInfo?.name;
             let message = pkg.message;
+
+            if(author != undefined && message.includes(client.name) && author != client.name){
+                mainWindow.flashFrame(true);
+
+                let n = new Notification({
+                    title: author + " mentioned you!",
+                    body: message,
+                    icon: __dirname + '/assets/logo.png',
+                });
+                                
+                n.show();
+            } 
 
             mainWindow.webContents.send('message', author, message, client.name);
         });
