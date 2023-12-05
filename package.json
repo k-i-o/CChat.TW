@@ -22,12 +22,12 @@
       "target": [
         "nsis"
       ],
-      "icon": "src/assets/favicon/favicon.ico",
+      "icon": "src/assets/favicon/logo.ico",
       "publisherName": "Samuele Radici"
     },
     "nsis": {
-      "installerIcon": "src/assets/favicon/favicon.ico",
-      "uninstallerIcon": "src/assets/favicon/favicon.ico",
+      "installerIcon": "src/assets/favicon/logo.ico",
+      "uninstallerIcon": "src/assets/favicon/logo.ico",
       "uninstallDisplayName": "CChat.Uninstaller",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
