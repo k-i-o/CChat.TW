@@ -1,4 +1,4 @@
-# CChatter 0.1 [ALPHA]
+# CChat.TW 0.1 [ALPHA]
 
 DDNet / Teeworlds Chat Client, no game, just chatting
 
