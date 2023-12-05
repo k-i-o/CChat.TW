@@ -28,7 +28,7 @@
     "nsis": {
       "installerIcon": "src/assets/favicon/logo.ico",
       "uninstallerIcon": "src/assets/favicon/logo.ico",
-      "uninstallDisplayName": "CChat.Uninstaller",
+      "uninstallDisplayName": "CChat.TW",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,

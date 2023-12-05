@@ -37,10 +37,10 @@ const createWindow = () => {
         client.disconnect();
     });
 
-    mainWindow.on("ready-to-show", async () => {
-        mainWindow.webContents.openDevTools();
+    // mainWindow.on("ready-to-show", async () => {
+    //     mainWindow.webContents.openDevTools();
 
-    });
+    // });
 
 }
 
