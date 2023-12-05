@@ -1,2 +1,5 @@
+dist/
+
 node_modules/
-ddnet/node_modules/
+
+src/addons/ddnet/node_modules/

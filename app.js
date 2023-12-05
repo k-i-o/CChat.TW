@@ -1,7 +1,7 @@
 const {app, BrowserWindow, ipcMain, Notification } = require('electron')
 const path = require('path')
 const url = require('url')
-const ddnet = require('./ddnet/index.js');
+const ddnet = require('./src/addons/ddnet/index.js');
 const { get } = require('http');
 try { require('electron-reloader')(module);} catch {};
 
@@ -13,7 +13,7 @@ const createWindow = () => {
         autoHideMenuBar: true,
         width: 1200,
         height: 800,
-        icon: __dirname + '/assets/logo.png',
+        icon: path.join(__dirname, 'src/assets/logo.png'),
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
@@ -101,13 +101,11 @@ app.whenReady().then(async () => {
             if(author != undefined && message.includes(client.name) && author != client.name){
                 mainWindow.flashFrame(true);
 
-                let n = new Notification({
+                new Notification({
                     title: author + " mentioned you!",
                     body: message,
-                    icon: __dirname + '/assets/logo.png',
-                });
-                                
-                n.show();
+                    icon: path.join(__dirname, '/src/assets/logo.png'),
+                }).show();
             } 
 
             mainWindow.webContents.send('message', author, message, client.name);

@@ -1,19 +1,48 @@
 {
   "name": "cchattw",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "DDNet / Teeworlds Chat Client, no game, just chatting.",
   "main": "app.js",
-  "directories": {
-    "ddnet": "ddnet"
-  },
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
+  },
+  "repository": "https://github.com/k-i-o/CChat.TW.git",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release",
+    "owner": "k-i-o"
+  },
+  "build": {
+    "artifactName": "cchat-setup-${version}.${ext}",
+    "appId": "org.rvs.cchat",
+    "productName": "CChat.TW",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/assets/favicon/favicon.ico",
+      "publisherName": "Samuele Radici"
+    },
+    "nsis": {
+      "installerIcon": "src/assets/favicon/favicon.ico",
+      "uninstallerIcon": "src/assets/favicon/favicon.ico",
+      "uninstallDisplayName": "CChat.Uninstaller",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CChat.TW",
+      "runAfterFinish": true,
+      "license": "LICENSE.txt"
+    }
   },
   "author": "Samuele Radici",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^27.1.2",
+    "electron-builder": "^24.9.1",
     "electron-reloader": "^1.2.3"
   }
 }
