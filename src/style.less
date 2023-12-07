@@ -323,6 +323,30 @@ input[type="color"] {
         background-color: fade(@black-color, 50%);
         z-index: 9999;
         display: none;
+
+        &#settings-modal {
+            .tee-save-btn {
+                display: flex;
+                gap: 20px;
+                position: relative;
+
+                .tee-container {
+
+                    width: 30%;
+
+                    .tee {
+                        position: absolute;
+                        transform: translateY(-65%);
+                        background-color: transparent;
+                    }
+                }
+
+                button {
+                    width: 70%;
+                }
+            }
+
+        }
     
         &.modal-active {
             display: block !important;
@@ -392,7 +416,9 @@ input[type="color"] {
                     width: 100%;
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-around;
+                    justify-content: center;
+                    align-items: stretch;
+                    gap: 10px;
 
                     input[type="text"], input[type="password"], input[type="number"], button {
                         width: 100%;
@@ -489,7 +515,7 @@ input[type="color"] {
                 align-items: center;
                 justify-content: center;
 
-                input[type="text"]#directip {
+                input[type="text"]#direct-ip {
                     width: 100%;
                     border-right: 1px solid fade(@white-color, 30%);
                     border-radius: @border-radius 0 0 @border-radius;
@@ -535,7 +561,7 @@ input[type="color"] {
         .table-wrapper {
 
             height: @table-height;
-            overflow-y: scroll;
+            overflow-y: auto;
             scroll-behavior: smooth;
 
             table {
@@ -635,13 +661,13 @@ input[type="color"] {
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            gap: 40px;
+            gap: 20px;
             border-bottom: 2px solid fade(@white-color, 30%);
 
             .data{
 
                 display: flex;
-                gap: 11%;
+                gap: 5%;
                 align-items: center;
                 justify-content: center;
                 width: 100%;

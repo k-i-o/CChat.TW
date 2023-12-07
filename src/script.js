@@ -5,6 +5,47 @@ let results;
 let currentResults;
 const preferredIPs = ["185.107.96.197", "192.223.24.201"];
 
+function BookmarksView() {
+  this._visible = false;
+  this._listeners = [];
+}
+
+BookmarksView.prototype.get = function() {
+  return this._visible;
+};
+
+BookmarksView.prototype.set = function(v) {
+  this._visible = v;
+  this.emitChange();
+};
+
+BookmarksView.prototype.on = function(eventName, listener) {
+  if (eventName === 'change' && typeof listener === 'function') {
+    this._listeners.push(listener);
+  }
+};
+
+BookmarksView.prototype.emitChange = function() {
+  for (let i = 0; i < this._listeners.length; i++) {
+    this._listeners[i](this._visible);
+  }
+};
+
+let bookmarkViewEvent = new BookmarksView();
+
+bookmarkViewEvent.on('change', function(v) {
+  if (v) {
+    document.querySelector("#bookmarkView").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)" class="w-6 h-6">
+      <path fill-rule="evenodd" d="M6 3a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V6a3 3 0 00-3-3H6zm1.5 1.5a.75.75 0 00-.75.75V16.5a.75.75 0 001.085.67L12 15.089l4.165 2.083a.75.75 0 001.085-.671V5.25a.75.75 0 00-.75-.75h-9z" clip-rule="evenodd" />
+    </svg>`;
+  } else {
+    document.querySelector("#bookmarkView").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6A2.25 2.25 0 016 3.75h1.5m9 0h-9" />
+    </svg>`;
+  }
+
+});
+
 const serversSection = () => document.querySelector("#servers");
 const serversList = () => document.querySelector("#serverContent");
 const serversTable = () => document.querySelector(".table-wrapper");
@@ -13,20 +54,30 @@ const clientAfterJoin = () => document.querySelector("#joined-server-wrapper");
 const filterInput = () => document.getElementById("filter");
 const chat = () => document.querySelector("#chat");
 
-const directIp = () => { return { ip: document.querySelector("#direct-ip").value.split(":")[0], port: document.querySelector("#direct-ip").value.split(":").length > 1 ? document.querySelector("#direct-ip").value.split(":")[1] : 8303 }};
+const directIpValue = () => document.querySelector("#direct-ip").value;
+
+const directIp = () => { 
+  return { 
+    ip: directIpValue().split(":")[0], 
+    port: directIpValue().split(":").length > 1 ? directIpValue().split(":")[1] : 8303 }
+};
 
 const localIdentity = () => JSON.parse(localStorage.getItem("identity")) || null;
-
-let teeNameValue = () => localIdentity()?.name || "caca";
-let teeClanValue = () => localIdentity()?.clan || "GCL";
-let teeSkinValue = () => localIdentity()?.skin || "default";
-let useCustomValue = () => localIdentity()?.use_custom || false;
-let teeColorBodyValue = () => localIdentity()?.color_body || "ffffff";
-let teeColorFeetValue = () => localIdentity()?.color_feet || "ffffff";
+let teeNameValue = () => localIdentity().name;
+let teeClanValue = () => localIdentity().clan;
+let teeSkinValue = () => localIdentity().skin;
+let useCustomValue = () => localIdentity().use_custom;
+let teeColorBodyValue = () => localIdentity().color_body;
+let teeColorFeetValue = () => localIdentity().color_feet;
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector(".copyright").innerHTML = new Date().getFullYear();
   getServers();
 });
+
+function directConnect() {
+  selectedServer(directIp().ip, directIp().port);
+}
 
 function getServers(btn = null) {
 
@@ -63,6 +114,49 @@ function getServers(btn = null) {
   }).catch(err => console.error(err)).finally(() => btn !== null ? btn.disabled = false : null);
 }
 
+function getBookmarkedServers() {
+  bookmarkViewEvent.set(!bookmarkViewEvent.get());
+  if(bookmarkViewEvent.get()){
+    loadBookmarkedServers();
+  }else{
+    currentResults = results;
+    dynamicLoadData(currentResults);
+  }
+}
+
+function loadBookmarkedServers() {
+  
+  const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+  const bookmarkedServers = bookmarks.filter(b => {
+    return results.some(r => {
+      return r.addresses[0].split('//')[1].split(":")[0] === b.ip && r.addresses[0].split('//')[1].split(":")[1] == b.port;
+    })
+  });
+
+  currentResults = bookmarkedServers;
+
+  dynamicLoadData(currentResults, true);
+
+}
+
+function bookmarkServer(ip, port, name) {
+  
+  const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+
+  if(bookmarks.some(b => b.ip === ip && b.port === port)) {
+    bookmarks.splice(bookmarks.findIndex(b => b.ip === ip && b.port === port), 1);
+    document.querySelector("#set-bookmark").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+      <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+    </svg>`;
+  } else {
+    bookmarks.push({ip, port, name});
+    document.querySelector("#set-bookmark").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+      <path d="M3.53 2.47a.75.75 0 00-1.06 1.06l18 18a.75.75 0 101.06-1.06l-18-18zM20.25 5.507v11.561L5.853 2.671c.15-.043.306-.075.467-.094a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93zM3.75 21V6.932l14.063 14.063L12 18.088l-7.165 3.583A.75.75 0 013.75 21z" />
+    </svg>`;
+  }
+
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+}
 
 filterInput().addEventListener("input", filterServers);
 serversTable().addEventListener("scroll", () => {
@@ -82,50 +176,80 @@ serversTable().addEventListener("scroll", () => {
   }
 });
 
-function dynamicLoadData(data) {
+function dynamicLoadData(data, bookmarked = false) {
   totalRecords = data.length;
   displayedRecords += recordsToRetrieve;
   serversList().innerHTML = '';
-  updateTable(0, recordsToRetrieve, data);
-  filterServers();
+  updateTable(0, recordsToRetrieve, data, bookmarked);
+  filterServers(bookmarked);
 }
 
-function updateTable(start, end, data) {
+function updateTable(start, end, data, bookmarked = false) {
   end = end > totalRecords ? totalRecords : end;
 
   for (let i = start; i < end; i++) {
     let row = data[i];
 
-    const star = `<svg style="color: var(--primary-color)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+    const star = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)" class="w-6 h-6">
+      <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
     </svg>
     `;
+
+    const bookmark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)" class="w-6 h-6">
+      <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+    </svg>
+    `;
+
+    const bookmark2 = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--primary-color)" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+    </svg>`;
+
+    const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+
     serversList().innerHTML += `
     <tr onclick="selectedServer(
-      '${row.addresses[0].split('//')[1].split(":")[0]}', 
-      ${row.addresses[0].split('//')[1].split(":")[1]}, 
-      '${row.info.name.replaceAll(/'/g, "\\'")}', 
-      '${row.info.map.name.replaceAll(/'/g, "\\'")}'
+      '${bookmarked ? row.ip : row.addresses[0].split('//')[1].split(":")[0] }', 
+      ${bookmarked ? row.port : row.addresses[0].split('//')[1].split(":")[1] }, 
+      '${bookmarked ? row.name.replaceAll(/'/g, "\\'") : row.info.name.replaceAll(/'/g, "\\'")}', 
+      '${bookmarked ? "???" : row.info.map.name.replaceAll(/'/g, "\\'")}'
     )">
       
-      <td>${row.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1])) ? star + " " + row.info.name : row.info.name}</td>
-      <td>${row.info.game_type}</td><td>${row.info.map.name}</td>
-      <td>${row.info.clients.length}/${row.info.max_clients}</td>
+      <td>${bookmarked ? (bookmark + " " + row.name) : (row.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1])) ? (star + " ") : (row.addresses.some(addr => bookmarks.some(b => addr.includes(b.ip) && addr.includes(b.port)))) ? bookmark2 + " " : "") + row.info.name}</td>
+      <td>${bookmarked ? "???" : row.info.game_type}</td>
+      <td>${bookmarked ? "???" : row.info.map.name}</td>
+      <td>${bookmarked ? "???" : (row.info.clients.length + "/" + row.info.max_clients)}</td>
     </tr>`;
   }
 }
 
-function selectedServer(ip, port, name = "Unknow", map = "Unknow") {
+function checkIfServerIsBookmarked(ip, port) {	
+  const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];	
+  return bookmarks.some(b => b.ip === ip && b.port == port);	
+}
+
+function selectedServer(ip, port, name = "Unknow Name", map = "Unknow Map") {
   document.querySelector(".disconnection-reason").innerHTML = "";
   eAPI.disconnect();
   eAPI.connect(ip, port);
   serversSection().style.display = "none";
   loadPage().style.display = "flex";
   chat().innerHTML = "";
+
+  if(checkIfServerIsBookmarked(ip, port)) {
+    clientAfterJoin().querySelector("#set-bookmark").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+      <path d="M3.53 2.47a.75.75 0 00-1.06 1.06l18 18a.75.75 0 101.06-1.06l-18-18zM20.25 5.507v11.561L5.853 2.671c.15-.043.306-.075.467-.094a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93zM3.75 21V6.932l14.063 14.063L12 18.088l-7.165 3.583A.75.75 0 013.75 21z" />
+    </svg>`;
+  } else {
+    clientAfterJoin().querySelector("#set-bookmark").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+      <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+    </svg>`;
+  }
+
   clientAfterJoin().querySelector(".server-name").innerHTML = `Server name: ${name}`;
   clientAfterJoin().querySelector(".server-ip").innerHTML = `${ip}:${port}`;
   clientAfterJoin().querySelector(".map-name").innerHTML = `Map name: ${map}`;
 
+  clientAfterJoin().querySelector("#set-bookmark").onclick = () => bookmarkServer(ip, port, name);
 }
 
 function back() {
@@ -133,29 +257,57 @@ function back() {
   loadPage().style.display = "none";
   clientAfterJoin().style.display = "none";
   eAPI.disconnect();
+
+  if(bookmarkViewEvent.get()){
+    loadBookmarkedServers();
+  }
 }
 
-function filterServers() {
+function filterServers(bookmarked = false) {
   const filter = filterInput().value.toUpperCase();
-  const filteredResults = results.filter(row =>
-    {return row.info.name.toUpperCase().includes(filter) ||
-    row.info.game_type.toUpperCase().includes(filter) ||
-    row.info.map.name.toUpperCase().includes(filter) ||
-    (row.info.clients !== undefined && row.info.clients.length > 0 && (row.info.clients.map(c => c.name.toUpperCase()).includes(filter) ||
-    row.info.clients.map(c => c.clan.toUpperCase()).includes(filter))) ||
-    (row.info.passworded == false && (row.info.clients.length + "/" + row.info.max_players).includes(filter))}
+  const filteredResults = currentResults.filter(row =>
+    {
+      if (bookmarked === true) {
+        return row.name.toUpperCase().includes(filter) || row.ip.toUpperCase().includes(filter);
+      }else {
+        return row.info.name.toUpperCase().includes(filter) ||
+        row.addresses.some(addr => addr.includes(filter)) ||
+        row.info.game_type.toUpperCase().includes(filter) ||
+        row.info.map.name.toUpperCase().includes(filter) ||
+        (row.info.clients !== undefined && row.info.clients.length > 0 && (row.info.clients.map(c => c.name.toUpperCase()).includes(filter) ||
+        row.info.clients.map(c => c.clan.toUpperCase()).includes(filter))) ||
+        (row.info.passworded == false && (row.info.clients.length + "/" + row.info.max_players).includes(filter))
+      }
+    }
   );
 
   totalRecords = filteredResults.length;
   displayedRecords = recordsToRetrieve;
 
   if (totalRecords === 0) {
-    serversList().innerHTML = `<tr onclick="getServers();filterInput().value=''"><td colspan="4" style="text-align: center">No results found? <span style="color: var(--primary-color); font-style: italic;">Try to refresh</span></td></tr>`;
+    serversList().innerHTML = bookmarked === true ? `
+      <tr onclick="getServers();filterInput().value=''">
+        <td colspan="4" style="text-align: center;white-space: normal;">
+          <span style="color: var(--primary-color); font-weight: bold">
+            No bookmarked server.<br>
+          </span>
+          To add one you must click 
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)" class="w-6 h-6">
+            <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+          </svg>
+          on the server header you want to bookmark when you are connected.
+        </td>
+      </tr>` : `
+      <tr onclick="getServers();filterInput().value=''">
+        <td colspan="4" style="text-align: center">
+          No results found? <span style="color: var(--primary-color); font-style: italic;">Try to refresh</span>
+        </td>
+      </tr>`;
     return;
   } else {
     serversList().innerHTML = '';
   }
-  updateTable(0, recordsToRetrieve, filteredResults);
+  updateTable(0, recordsToRetrieve, filteredResults, bookmarked);
 }
 
 let originalOrder = null; 
@@ -252,15 +404,27 @@ const useCustom = () => document.getElementsByName("use-custom")[0];
 const teeColorBody = () => document.getElementsByName("tee-body-color")[0];
 const teeColorFeet = () => document.getElementsByName("tee-feet-color")[0];
 
-teeColorBody().addEventListener("input", (e) => {
-});
+// teeColorBody().addEventListener("input", (e) => {
+//   document.querySelector(".tee").setAttribute('data-bodycolor', e.value);
+//   myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
+//   setTimeout(() => {
+//     myTee.lookAt(50); //the trick
+//   },0)
 
-teeColorFeet().addEventListener("input", (e) => {
-});
+// });
+
+// teeColorFeet().addEventListener("input", (e) => {
+//   document.querySelector(".tee").setAttribute('data-feetcolor', e.value);
+//   myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
+//   setTimeout(() => {
+//     myTee.lookAt(50); //the trick
+//   },0)
+
+// });
+
+// let myTee;
 
 function openSettings() {
-  let myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
-  myTee.lookAtCursor();
 
   teeName().value = teeNameValue();
   teeClan().value = teeClanValue();
@@ -274,6 +438,14 @@ function openSettings() {
 
 function closeSettings() {
   document.querySelector("#settings-modal").classList.remove("modal-active");
+}
+
+function openConsole(type) {
+  document.querySelector("#console-modal").classList.add("modal-active");
+}
+
+function closeConsole() {
+  document.querySelector("#console-modal").classList.remove("modal-active");
 }
 
 document.querySelector("#settings-modal").addEventListener("submit", (e) => {
@@ -290,3 +462,4 @@ document.querySelector("#settings-modal").addEventListener("submit", (e) => {
 
   closeSettings();
 });
+

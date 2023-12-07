@@ -248,8 +248,11 @@ export class Client extends EventEmitter {
 
 	private UUIDManager: UUIDManager;
   
-	constructor(nickname: string, options?: iOptions) {
+	constructor(ip: string, port: number, nickname: string, options?: iOptions) {
 		super();
+
+		this.host = ip;
+		this.port = port;
 
 		this.name = nickname;
 		this.AckGameTick = 0;
@@ -510,11 +513,8 @@ export class Client extends EventEmitter {
 
 	
 	/** Connect the client to the server. */
-	connect(ip: string, port: number) { 
+	connect() { 
 		
-		this.host = ip;
-		this.port = port;
-
 		this.State = States.STATE_CONNECTING;
 
 		let predTimer = setInterval(() => {

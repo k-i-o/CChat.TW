@@ -133,8 +133,10 @@ var messageTypes = [
 ];
 var Client = /** @class */ (function (_super) {
     __extends(Client, _super);
-    function Client(nickname, options) {
+    function Client(ip, port, nickname, options) {
         var _this = _super.call(this) || this;
+        _this.host = ip;
+        _this.port = port;
         _this.name = nickname;
         _this.AckGameTick = 0;
         _this.PredGameTick = 0;
@@ -358,11 +360,9 @@ var Client = /** @class */ (function (_super) {
         return chunk;
     };
     /** Connect the client to the server. */
-    Client.prototype.connect = function (ip, port) {
+    Client.prototype.connect = function () {
         var _this = this;
         var _a;
-        this.host = ip;
-        this.port = port;
         this.State = States.STATE_CONNECTING;
         var predTimer = setInterval(function () {
             if (_this.State == States.STATE_ONLINE) {

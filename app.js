@@ -37,10 +37,10 @@ const createWindow = () => {
         client.disconnect();
     });
 
-    // mainWindow.on("ready-to-show", async () => {
-    //     mainWindow.webContents.openDevTools();
+    mainWindow.on("ready-to-show", async () => {
+        mainWindow.webContents.openDevTools();
 
-    // });
+    });
 
 }
 
@@ -64,19 +64,27 @@ app.whenReady().then(async () => {
 
     ipcMain.handle('connect', async (event, ip, port) => {
 
-        const identity = await getItem("identity") || {
-            name: "CChatter",
-            clan: "GCL",
-            country: 0, 
-            skin: "default",
-            use_custom_color: 0,
-            color_body: 65408,
-            color_feet: 65408,
-        };
+        let identity = await getItem("identity") || null;
 
-        client = new ddnet.Client(identity.name, {identity});
+        if(identity === null) {
 
-        client.connect(ip, port);
+            const tmpID = {
+                name: "CChatter",
+                clan: "GCL",
+                country: 0, 
+                skin: "default",
+                use_custom_color: 0,
+                color_body: 65408,
+                color_feet: 65408,
+            };
+
+            await setItem("identity", JSON.stringify(tmpID));
+            identity = tmpID;
+        }
+
+        client = new ddnet.Client(ip, port, identity.name, {identity});
+
+        client.connect();
 
         client.on("connected", () => {
             console.log("Connected!");

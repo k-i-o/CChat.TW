@@ -25,6 +25,16 @@
       <div class="drag"></div>
 
       <div class="system">
+        <button id="local-console" onclick="openConsole('local')" title="Open local console">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+          </svg>
+        </button>
+        <button id="remote-console" onclick="openConsole('remote')" title="Open remote console">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </button>
         <button id="settings" onclick="openSettings()" title="Open settings">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
@@ -35,52 +45,18 @@
 
       <div class="buttons">
         <button id="minimize" onclick="eAPI.minimize()" title="Minimize the window">
-
-          <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M19.5 12h-15"
-          />
-        </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+          </svg>
         </button>
         <button id="maximize" onclick="eAPI.maximize()" title="Maximize the window">
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6"/>
           </svg>
         </button>
         <button id="close" onclick="eAPI.close()" title="CLOSE the application!!">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -105,17 +81,44 @@
               <input name="tee-clan" type="text" placeholder="Clan's name (default: 'GCL')">
               <input name="tee-skin" type="text" placeholder="Skin's name (default: 'default')">
               <!-- <input name="body_color" type="number" placeholder="Body's color (default: 65408)"> -->
-              <input name="use-custom" type="checkbox" placeholder="Use the colors customized (default: false)">
+              <div style="display: flex; justify-content: space-between;">
+                <label for="use-custom">Use default colors (default: false)</label><input id="use-custom" name="use-custom" type="checkbox" placeholder="Use the colors customized (default: false)">
+              </div>
               <div style="display: flex; justify-content: space-between;">
                 <label for="body-color">Body's color (default: 65408)</label><div class="color-input"><input id="body-color" name="tee-body-color" type="color" value="#ffffff"></div>
               </div>
               <div style="display: flex; justify-content: space-between;">
                 <label for="feet-color">Feet's color (default: 65408)</label><div class="color-input"><input id="feet-color" name="tee-feet-color" type="color" value="#ffffff"></div>
               </div>
-              <div class='tee'></div>
+              <div class="tee-save-btn">
+                <div class="tee-container"><div class='tee'></div></div>
+                <button name="button" type="submit">
+                  <span>Save</span> 
+                  <!-- <div class="loader hidden"></div> -->
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal" id="console-modal">
+        <div class="modal-bg"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Console</h3>
+            <button id="close-modal" onclick="closeConsole()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="console-content"></div>
+            <form id="console-form">
+              <input name="command" type="text" placeholder="Type a command...">
               <button name="button" type="submit">
-                <span>Save</span> 
-                <!-- <div class="loader hidden"></div> -->
+                <span>Send</span> 
               </button>
             </form>
           </div>
@@ -125,6 +128,11 @@
       <div id="servers">
         
         <div class="inputs">
+          <button onclick="getBookmarkedServers();" id="bookmarkView" class="single" title="Show bookmarked servers">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6A2.25 2.25 0 016 3.75h1.5m9 0h-9" />
+            </svg>           
+          </button>
           <button onclick="getServers(this)" class="single" title="Refresh (may you need to change the filter text)">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -132,8 +140,8 @@
           </button>
           <input id="filter" type="text" placeholder="Filter..." title="Search by name of: server, map, player in server">
           <div class="direct-connection">
-            <input id="directip" type="text" placeholder="eg. 127.0.0.1:8309 (default: localhost:8303, default port: 8303)" title="Insert an ip:port to connect to it directly">
-            <button onclick="selectServers(directIp().ip, directIp().port, )" class="single" title="Refresh (may you need to change the filter text)">
+            <input id="direct-ip" type="text" placeholder="eg. 127.0.0.1:8309 (default: localhost:8303, default port: 8303)" title="Insert an ip:port to connect to it directly">
+            <button onclick="directConnect()" class="single" title="Connect directly to a server">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
               </svg>                  
@@ -196,6 +204,11 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
+          <button class="single" type="button" id="set-bookmark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+            </svg>            
+          </button>
           <div class="data">
             <span class="server-name"></span>
             <span class="map-name"></span>
@@ -218,7 +231,7 @@
 
     <div class="footer-bar">
   
-      <div>© <script>document.write(new Date().getFullYear())</script> <a href="#" onclick="eAPI.goto('https://github.com/k-i-o')">Samuele Radici</a> All Rights Reserved.</div>
+      <div>© <span class="copyright"></span> <a href="#" onclick="eAPI.goto('https://github.com/k-i-o')">Samuele Radici</a> All Rights Reserved.</div>
 
       <div class="drag"></div>
 
