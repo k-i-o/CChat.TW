@@ -1,9 +1,11 @@
-# CChatter 0.1 [ALPHA]
+# CChat.TW 0.1 [ALPHA]
 
 DDNet / Teeworlds Chat Client, no game, just chatting
 
+Days spent creating the alpha: 2
+
 ## Credits
-#### Samuele Radici - Structure, Design, Development
+### Samuele Radici - Structure, Design, Development
 #### swarfey - Client JS Lib Development -> https://gitlab.com/swarfey/teeworlds-client/ (i edited something)
 #### Aleksandar Blažić - Tee Render JS Lib Development -> https://github.com/AlexIsTheGuy/TeeAssembler-2.0
 
