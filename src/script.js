@@ -79,22 +79,38 @@ function directConnect() {
   selectedServer(directIp().ip, directIp().port);
 }
 
-function getServers(btn = null) {
+function refresh(thisBtn) {
+  if (bookmarkViewEvent.get()) {
+    getServers(thisBtn).then((success) => {
+      if (success) {
+        loadBookmarkedServers();
+      }
+    });
+  } else {
+    getServers(thisBtn);
+  }
+}
 
-  if (btn !== null) { btn.style.rotate = (btn.style.rotate ? parseFloat(btn.style.rotate.replace("deg", "")) : null || 0) + 180 + "deg"; btn.disabled = true; }
+async function getServers(btn = null) {
+  if (btn !== null) { 
+    btn.style.rotate = (btn.style.rotate ? parseFloat(btn.style.rotate.replace("deg", "")) : null || 0) + 180 + "deg"; 
+    btn.disabled = true; 
+  }
 
-  fetch('https://master1.ddnet.org/ddnet/15/servers.json', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(res => res.json())
-  .then((out) => {
+  try {
+    const response = await fetch('https://master1.ddnet.org/ddnet/15/servers.json', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const out = await response.json();
 
     out.servers.sort((a, b) => {
       const hasPreferredIPA = a.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1]));
       const hasPreferredIPB = b.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1]));
-    
+
       if (hasPreferredIPA && hasPreferredIPB) {
         return 0;
       } else if (hasPreferredIPA) {
@@ -102,7 +118,7 @@ function getServers(btn = null) {
       } else if (hasPreferredIPB) {
         return 1;
       }
-    
+
       return 0;
     });
 
@@ -111,8 +127,18 @@ function getServers(btn = null) {
 
     dynamicLoadData(currentResults);
 
-  }).catch(err => console.error(err)).finally(() => btn !== null ? btn.disabled = false : null);
+    return true;
+
+  } catch (err) {
+    console.error(err);
+    return false;
+  } finally {
+    if (btn !== null) {
+      btn.disabled = false;
+    }
+  }
 }
+
 
 function getBookmarkedServers() {
   bookmarkViewEvent.set(!bookmarkViewEvent.get());
@@ -208,16 +234,16 @@ function updateTable(start, end, data, bookmarked = false) {
 
     serversList().innerHTML += `
     <tr onclick="selectedServer(
-      '${bookmarked ? row.ip : row.addresses[0].split('//')[1].split(":")[0] }', 
-      ${bookmarked ? row.port : row.addresses[0].split('//')[1].split(":")[1] }, 
-      '${bookmarked ? row.name.replaceAll(/'/g, "\\'") : row.info.name.replaceAll(/'/g, "\\'")}', 
-      '${bookmarked ? "???" : row.info.map.name.replaceAll(/'/g, "\\'")}'
+      '${bookmarked === true ? row.ip : row.addresses[0].split('//')[1].split(":")[0] }', 
+      ${bookmarked === true ? row.port : row.addresses[0].split('//')[1].split(":")[1] }, 
+      '${bookmarked === true ? row.name.replaceAll(/'/g, "\\'") : row.info.name.replaceAll(/'/g, "\\'")}', 
+      '${bookmarked === true ? "???" : row.info.map.name.replaceAll(/'/g, "\\'")}'
     )">
       
-      <td>${bookmarked ? (bookmark + " " + row.name) : (row.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1])) ? (star + " ") : (row.addresses.some(addr => bookmarks.some(b => addr.includes(b.ip) && addr.includes(b.port)))) ? bookmark2 + " " : "") + row.info.name}</td>
-      <td>${bookmarked ? "???" : row.info.game_type}</td>
-      <td>${bookmarked ? "???" : row.info.map.name}</td>
-      <td>${bookmarked ? "???" : (row.info.clients.length + "/" + row.info.max_clients)}</td>
+      <td>${bookmarked === true ? (bookmark + " " + row.name) : (row.addresses.some(addr => addr.includes(preferredIPs[0]) || addr.includes(preferredIPs[1])) ? (star + " ") : (row.addresses.some(addr => bookmarks.some(b => addr.includes(b.ip) && addr.includes(b.port)))) ? bookmark2 + " " : "") + row.info.name}</td>
+      <td>${bookmarked === true ? "???" : row.info.game_type}</td>
+      <td>${bookmarked === true ? "???" : row.info.map.name}</td>
+      <td>${bookmarked === true ? "???" : (row.info.clients.length + "/" + row.info.max_clients)}</td>
     </tr>`;
   }
 }
@@ -264,6 +290,11 @@ function back() {
 }
 
 function filterServers(bookmarked = false) {
+
+  if(bookmarked && bookmarked != true) {
+    bookmarked = bookmarkViewEvent.get();
+  }
+
   const filter = filterInput().value.toUpperCase();
   const filteredResults = currentResults.filter(row =>
     {
@@ -390,7 +421,6 @@ function sortBy(target, sortOrder = null) {
   updateTable(0, recordsToRetrieve, currentResults);
 }
 
-
 document.querySelector(".chatTools").addEventListener("submit", (e) => {
   e.preventDefault();
   eAPI.sendMsg(e.target.sendmsg.value);
@@ -414,18 +444,27 @@ const teeColorFeet = () => document.getElementsByName("tee-feet-color")[0];
 // });
 
 // teeColorFeet().addEventListener("input", (e) => {
-//   document.querySelector(".tee").setAttribute('data-feetcolor', e.value);
-//   myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
-//   setTimeout(() => {
-//     myTee.lookAt(50); //the trick
-//   },0)
+
 
 // });
 
-// let myTee;
+document.querySelector("#use-custom").addEventListener("change", (e) => {
+  if (e.target.checked) {
+    teeColorBody().parentElement.parentElement.style.display = "flex";
+    teeColorFeet().parentElement.parentElement.style.display = "flex";
+  } else {
+    teeColorBody().parentElement.parentElement.style.display = "none";
+    teeColorFeet().parentElement.parentElement.style.display = "none";
+  }
+});
+
+let myTee;
 
 function openSettings() {
-
+  myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
+  setTimeout(() => {
+    myTee.lookAt(50); //the trick
+  },2)
   teeName().value = teeNameValue();
   teeClan().value = teeClanValue();
   teeSkin().value = teeSkinValue();
