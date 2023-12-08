@@ -2,7 +2,7 @@
 
 DDNet / Teeworlds Chat Client, no game, just chatting
 
-Days spent creating the alpha: 2
+Time spent creating the alpha: 2 days
 
 ## Credits
 ### Samuele Radici - Structure, Design, Development
