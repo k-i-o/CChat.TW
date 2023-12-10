@@ -400,6 +400,8 @@ var Client = /** @class */ (function (_super) {
         }, 1000);
         var Timeout = setInterval(function () {
             var _a;
+            if (_this.State == States.STATE_OFFLINE)
+                clearInterval(Timeout);
             var timeoutTime = ((_a = _this.options) === null || _a === void 0 ? void 0 : _a.timeout) ? _this.options.timeout : 15000;
             if ((new Date().getTime() - _this.lastRecvTime) > timeoutTime) {
                 _this.State = States.STATE_OFFLINE;
@@ -778,10 +780,12 @@ var Client = /** @class */ (function (_super) {
         return new Promise(function (resolve) {
             _this.SendControlMsg(4).then(function () {
                 resolve(true);
-                if (_this.socket)
+                if (_this.socket) {
                     _this.socket.close();
+                }
                 _this.socket = undefined;
                 _this.State = States.STATE_OFFLINE;
+                _this.emit("disconnect", "Disconnected by client");
             });
         });
     };

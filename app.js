@@ -134,6 +134,7 @@ app.whenReady().then(async () => {
     ipcMain.handle('disconnect', async (event, msg) => {
         if(client == null) return;
         client.disconnect();
+        client = null;
     });
 
     ipcMain.handle('setTeeInfo', async (event, name, clan, skin, use_custom, color_body, color_feet) => {
@@ -159,7 +160,11 @@ app.whenReady().then(async () => {
     });
 
     if (mainWindow === null){
-        createWindow();        
+        createWindow();    
+        if (process.platform === 'win32')
+        {
+            app.setAppUserModelId("CChat.TW");
+        }    
     }
 
 

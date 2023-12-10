@@ -554,6 +554,8 @@ export class Client extends EventEmitter {
 		}, 1000)
 		
 		let Timeout = setInterval(() => {
+			if (this.State == States.STATE_OFFLINE)
+				clearInterval(Timeout);
 			let timeoutTime = this.options?.timeout ? this.options.timeout : 15000;
 			if ((new Date().getTime() - this.lastRecvTime) > timeoutTime) {
 				this.State = States.STATE_OFFLINE;
@@ -982,18 +984,21 @@ export class Client extends EventEmitter {
 	}
 	
 	/** Disconnect the client. */
-	disconnect() { 
-		return new Promise((resolve) => {
-			this.SendControlMsg(4).then(() => {
-				resolve(true);
-				if (this.socket)
-					this.socket.close();
-				this.socket = undefined
-				this.State = States.STATE_OFFLINE;
-			})
-			
-		})
-	}
+    disconnect() { 
+        return new Promise((resolve) => {
+            this.SendControlMsg(4).then(() => {
+                resolve(true);
+                if (this.socket)
+				{
+                    this.socket.close();
+				}	
+                this.socket = undefined;
+                this.State = States.STATE_OFFLINE;
+				this.emit("disconnect", "Disconnected by client");
+            })
+            
+        })
+    }
 
 	/** Get all available vote options (for example for map voting) */
 	get VoteOptionList(): string[] { 
