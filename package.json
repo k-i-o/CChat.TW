@@ -1,6 +1,6 @@
 {
   "name": "cchattw",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DDNet / Teeworlds Chat Client, no game, just chatting.",
   "main": "app.js",
   "scripts": {

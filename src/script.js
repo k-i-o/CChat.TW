@@ -66,7 +66,7 @@ const localIdentity = () => JSON.parse(localStorage.getItem("identity")) || null
 let teeNameValue = () => localIdentity().name;
 let teeClanValue = () => localIdentity().clan;
 let teeSkinValue = () => localIdentity().skin;
-let useCustomValue = () => localIdentity().use_custom;
+let useCustomValue = () => localIdentity().use_custom_color;
 let teeColorBodyValue = () => localIdentity().color_body;
 let teeColorFeetValue = () => localIdentity().color_feet;
 
@@ -468,9 +468,11 @@ function openSettings() {
   teeName().value = teeNameValue();
   teeClan().value = teeClanValue();
   teeSkin().value = teeSkinValue();
-  useCustom().checked = useCustomValue();
+  useCustom().checked = useCustomValue() == 1 ? true : false;
   teeColorBody().value = teeColorBodyValue();
   teeColorFeet().value = teeColorFeetValue();
+
+  console.log(useCustomValue());
 
   document.querySelector("#settings-modal").classList.add("modal-active");
 }
