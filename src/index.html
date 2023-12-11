@@ -128,6 +128,36 @@
         </div>
       </div>
 
+      <div class="modal" id="vote-modal">
+        <div class="modal-bg"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Vote</h3>
+            <button id="close-modal" onclick="closeVote()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="vote-form"></form>
+            <input type="text" placeholder="Insert a comment...">
+            <select name="" required>
+              <option value="-1" hidden selected disabled>Select vote type</option>
+              <option value="0">Spect</option>
+              <option value="1">Kick</option>
+              <option value="2">Options</option>
+            </select>
+            <select name="" id="" required>
+              <option value="-1" hidden selected disabled>Select the target</option>
+            </select>            
+            <button name="button" type="submit">
+              <span>Send vote</span> 
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div id="servers">
         
         <div class="inputs">
@@ -202,15 +232,20 @@
 
       <div id="joined-server-wrapper">
         <div class="server-info">
-          <button class="single" type="button" onclick="back()">
+          <button class="single" type="button" onclick="back()" title="Go back to the servers list">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
-          <button class="single" type="button" id="set-bookmark">
+          <button class="single" type="button" id="set-bookmark" title="Add the server to your bookmark">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
               <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
             </svg>            
+          </button>
+          <button class="single" type="button" id="call-vote" title="Call a vote on the server" onclick="openVote()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+            </svg>                 
           </button>
           <div class="data">
             <span class="server-name"></span>

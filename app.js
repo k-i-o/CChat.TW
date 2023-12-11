@@ -7,7 +7,7 @@ try { require('electron-reloader')(module);} catch {};
 
 const log = require('electron-log/main');
 const userLog = log.scope('user');
-log.transports.console.level = false;
+// log.transports.console.level = false;
 
 let mainWindow = null;
 let client = null;

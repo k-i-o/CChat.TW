@@ -26,8 +26,8 @@ BookmarksView.prototype.on = function(eventName, listener) {
 };
 
 BookmarksView.prototype.emitChange = function() {
-  for (let i = 0; i < this._listeners.length; i++) {
-    this._listeners[i](this._visible);
+  for (const element of this._listeners) {
+    element(this._visible);
   }
 };
 
@@ -487,6 +487,14 @@ function openConsole(type) {
 
 function closeConsole() {
   document.querySelector("#console-modal").classList.remove("modal-active");
+}
+
+function openVote() {
+  document.querySelector("#vote-modal").classList.add("modal-active");
+}
+
+function closeVote() {
+  document.querySelector("#vote-modal").classList.remove("modal-active");
 }
 
 document.querySelector("#settings-modal").addEventListener("submit", (e) => {
