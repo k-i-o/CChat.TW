@@ -35,13 +35,12 @@ ipcRenderer.on('disconnected', (event, reason) => {
 
   document.querySelector(".disconnection-reason").innerHTML = reason;
 
-  setTimeout(() => {
-    loadPage().style.display = "none";
-    document.querySelector(".disconnection-reason").innerHTML = "";
-    clientAfterJoin().style.display = "none";
-    loadPage().style.display = "none";
-    serversSection().style.display = "flex";
-  }, 1500);
+  loadPage().style.display = "none";
+  document.querySelector(".disconnection-reason").innerHTML = "";
+  clientAfterJoin().style.display = "none";
+  loadPage().style.display = "none";
+  serversSection().style.display = "flex";
+
 });
 
 ipcRenderer.on('vote', (event, vote) => {
