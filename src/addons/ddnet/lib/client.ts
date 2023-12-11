@@ -187,7 +187,6 @@ declare interface iOptions {
 
 export declare interface Client {
 	
-
 	on(event: 'connected', listener: () => void): this;
 	on(event: 'disconnect', listener: (reason: string) => void): this;
 
@@ -247,7 +246,7 @@ export class Client extends EventEmitter {
 	private requestResend: boolean;
 
 	private UUIDManager: UUIDManager;
-  
+
 	constructor(ip: string, port: number, nickname: string, options?: iOptions) {
 		super();
 
@@ -895,8 +894,6 @@ export class Client extends EventEmitter {
 								}
 							}
 							this.emit("emote", unpacked)
-
-							
 
 						} else if (chunk.msgid == NETMSG_Game.SV_BROADCAST) {
 							let unpacker = new MsgUnpacker(chunk.raw);

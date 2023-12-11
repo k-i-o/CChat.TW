@@ -25,6 +25,7 @@ const chat = () => document.querySelector("#chat");
 
 ipcRenderer.on('connected', (event) => {
   console.log("Connected!");
+  
   loadPage().style.display = "none";
   clientAfterJoin().style.display = "flex";
 });

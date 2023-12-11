@@ -5,6 +5,10 @@ const ddnet = require('./src/addons/ddnet/index.js');
 const { get } = require('http');
 try { require('electron-reloader')(module);} catch {};
 
+const log = require('electron-log/main');
+const userLog = log.scope('user');
+log.transports.console.level = false;
+
 let mainWindow = null;
 let client = null;
 
@@ -87,24 +91,30 @@ app.whenReady().then(async () => {
         client.connect();
 
         client.on("connected", () => {
-            console.log("Connected!");
-            mainWindow.webContents.send('connected', ip, port);
-        })
-        
+            log.debug("USER CONNECTED TO SERVER.");
+            mainWindow.webContents.send('connected');
+        });
+
+
+        // client.on("vote", (vote) => {
+        //     mainWindow.webContents.send('vote', vote);
+        // });
+
         client.on("disconnect", reason => {
-            console.log("Disconnected: " + reason);
+            log.debug("USER DISCONNECTED FROM SERVER (reason: " + reason + ")");
             client = null;
             mainWindow.webContents.send('disconnected', reason);
         })
 
-        client.on("message", async (pkg) => {
 
-            if(client == null) return;
+        client.on("message", async (pkg) => {
 
             let author = pkg.author?.ClientInfo?.name;
             let message = pkg.message;
 
-            
+            userLog.info((author === undefined ? "GAME_SERVER" : author) + ": " + message);
+
+            if(client == null) return;
 
             if(author != undefined && message.includes(client.name) && author != client.name){
                 mainWindow.flashFrame(true);
@@ -114,6 +124,9 @@ app.whenReady().then(async () => {
                     body: message,
                     icon: path.join(__dirname, '/src/assets/logo.png'),
                 }).show();
+
+                log.debug("USER MENTIONED BY " + author + "(notification triggered)");
+
             } 
 
             mainWindow.webContents.send('message', author, message, client.name);
@@ -122,6 +135,7 @@ app.whenReady().then(async () => {
         process.on("SIGINT", () => {
             if(client == null) return;
             client.disconnect().then(() => process.exit(0));
+            log.debug("PROCESS CLOSED");
         });
 
     });
@@ -131,7 +145,7 @@ app.whenReady().then(async () => {
         client.game.Say(msg);
     });
 
-    ipcMain.handle('disconnect', async (event, msg) => {
+    ipcMain.handle('disconnect', async (event) => {
         if(client == null) return;
         client.disconnect();
         client = null;
@@ -151,11 +165,15 @@ app.whenReady().then(async () => {
 
         await setItem("identity", JSON.stringify(identity));
 
+        log.debug("USER CHANGED TEE INFO locally.");
+
         if(client == null) return;
         // client.options.identity = identity;
 
         client.name = identity.name;
         client.game.ChangePlayerInfo(identity);
+
+        log.debug("USER CHANGED TEE INFO remotely.");
 
     });
 
@@ -165,6 +183,8 @@ app.whenReady().then(async () => {
         {
             app.setAppUserModelId("CChat.TW");
         }    
+
+        log.debug("NEW SESSION STARTED AT " + new Date().toLocaleString());
     }
 
 
