@@ -76,15 +76,18 @@ app.whenReady().then(async () => {
                 name: "CChatter",
                 clan: "GCL",
                 country: 0, 
-                skin: "default",
-                use_custom_color: 0,
-                color_body: 65408,
-                color_feet: 65408,
+                skin: "greyfox",
+                use_custom_color: 1,
+                color_body: "#965CFF",
+                color_feet: "#965CFF",
             };
 
             await setItem("identity", JSON.stringify(tmpID));
             identity = tmpID;
         }
+
+        identity.color_body = hexToTwColor(identity.color_body);
+        identity.color_feet = hexToTwColor(identity.color_feet);
 
         client = new ddnet.Client(ip, port, identity.name, {identity});
 
@@ -170,6 +173,8 @@ app.whenReady().then(async () => {
         if(client == null) return;
         // client.options.identity = identity;
 
+        identity.color_body = hexToTwColor(identity.color_body);
+        identity.color_feet = hexToTwColor(identity.color_feet);
         client.name = identity.name;
         client.game.ChangePlayerInfo(identity);
 
@@ -185,6 +190,20 @@ app.whenReady().then(async () => {
         }    
 
         log.debug("NEW SESSION STARTED AT " + new Date().toLocaleString());
+
+        let identity = await getItem("identity") || null;
+
+        if(identity === null) {
+            await setItem("identity", JSON.stringify({
+                name: "CChatter",
+                clan: "GCL",
+                country: 0, 
+                skin: "greyfox",
+                use_custom_color: 1,
+                color_body: "#965CFF",
+                color_feet: "#965CFF",
+            }));
+        }
     }
 
 
@@ -204,4 +223,59 @@ async function setItem(key, value) {
 
     return result;
     
+}
+
+
+function rgbToHsl(rgb) {
+    const r = rgb[0] / 255;
+    const g = rgb[1] / 255;
+    const b = rgb[2] / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+  
+    let h, s;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h /= 6;
+    }
+    return [h, s, l];
+}  
+function hslToTwColor(hsl) {
+    const h = Math.round(hsl[0] * 255);
+    const s = Math.round(hsl[1] * 255);
+    let l;
+    
+    if (hsl[2] === 0 || hsl[2] === 1) {
+        l = Math.round(hsl[2] * 255);
+    } else {
+        l = Math.round(hsl[2] * 255 / 2);
+    }
+  
+    const twColor = (h << 16) + (s << 8) + l;
+    return twColor;
+}
+function hexToTwColor(hex) {
+    hex = hex.replace(/^#/, '');
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    const hsl = rgbToHsl([r, g, b]);
+    const twColor = hslToTwColor(hsl);
+    return twColor;
 }

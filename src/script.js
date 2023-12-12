@@ -448,23 +448,29 @@ const teeColorFeet = () => document.getElementsByName("tee-feet-color")[0];
 
 // });
 
-document.querySelector("#use-custom").addEventListener("change", (e) => {
-  if (e.target.checked) {
+function customColor() {
+  if (useCustomValue() == 1 ? true : false) {
     teeColorBody().parentElement.parentElement.style.display = "flex";
     teeColorFeet().parentElement.parentElement.style.display = "flex";
   } else {
     teeColorBody().parentElement.parentElement.style.display = "none";
     teeColorFeet().parentElement.parentElement.style.display = "none";
   }
+}
+
+document.querySelector("#use-custom").addEventListener("change", (e) => {
+  customColor();
 });
 
 let myTee;
 
 function openSettings() {
   myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
+  myTee.setTeeColor(teeColorBodyValue(), teeColorFeetValue());
   setTimeout(() => {
     myTee.lookAt(50); //the trick
-  },2)
+  },0)
+  
   teeName().value = teeNameValue();
   teeClan().value = teeClanValue();
   teeSkin().value = teeSkinValue();
@@ -472,7 +478,7 @@ function openSettings() {
   teeColorBody().value = teeColorBodyValue();
   teeColorFeet().value = teeColorFeetValue();
 
-  console.log(useCustomValue());
+  customColor();
 
   document.querySelector("#settings-modal").classList.add("modal-active");
 }
@@ -511,4 +517,3 @@ document.querySelector("#settings-modal").addEventListener("submit", (e) => {
 
   closeSettings();
 });
-
