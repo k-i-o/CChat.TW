@@ -2,8 +2,8 @@ const {app, BrowserWindow, ipcMain, Notification } = require('electron')
 const path = require('path')
 const url = require('url')
 const ddnet = require('./src/addons/ddnet/index.js');
-const { get } = require('http');
 try { require('electron-reloader')(module);} catch {};
+const DiscordRPC = require('discord-rpc');
 
 const log = require('electron-log/main');
 const userLog = log.scope('user');
@@ -11,6 +11,45 @@ const userLog = log.scope('user');
 
 let mainWindow = null;
 let client = null;
+
+let rpc;
+
+async function setActivity() {
+    if (!rpc || !mainWindow) {
+        return;
+    }
+
+    const activity = { 
+        instance: false, 
+        startTimestamp, 
+        state: "Using the chat...",
+        largeImageKey: "logoimg",
+        largeImageText: "Logo",
+        smallImageKey: "chatimg",
+        smallImageText: "Writing...",
+    }; 
+
+    rpc.setActivity(activity);
+}
+
+function discordRPC(clientId) {
+    if (rpc) {
+        rpc.clearActivity();
+        rpc.destroy();
+        rpc = undefined;
+    }
+    rpc = new DiscordRPC.Client({ transport: 'ipc' });
+    rpc.on('ready', () => {
+        setActivity();
+
+        setInterval(() => {
+            setActivity();
+        }, 15e3);
+    });
+
+    startTimestamp = new Date();
+    rpc.login({ clientId });
+}
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
@@ -49,6 +88,8 @@ const createWindow = () => {
 }
 
 app.whenReady().then(async () => {
+
+    discordRPC("1187078685904359484");
 
     ipcMain.on('close', (event) => {
         app.quit();

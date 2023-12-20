@@ -466,7 +466,6 @@ let myTee;
 
 function openSettings() {
   myTee = new Tee(`https://ddnet.org/skins/skin/${teeSkinValue()}.png`, document.querySelector(".tee"));
-  myTee.setTeeColor(teeColorBodyValue(), teeColorFeetValue());
   setTimeout(() => {
     myTee.lookAt(50); //the trick
   },0)
